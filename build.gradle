@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'ai.djl', name: 'api', version: '0.31.0'
+    implementation group: 'ai.djl.pytorch', name: 'pytorch-engine', version: '0.31.0'
+    implementation group: 'ai.djl.huggingface', name: 'tokenizers', version: '0.31.0'
+    runtimeOnly "ai.djl.pytorch:pytorch-jni:2.4.0-0.30.0"
+    runtimeOnly "ai.djl.pytorch:pytorch-native-cu124:2.4.0:linux-x86_64"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'org.example.Main'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
